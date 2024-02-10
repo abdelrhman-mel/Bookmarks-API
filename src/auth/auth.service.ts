@@ -25,7 +25,6 @@ export class AuthService {
                 data: {
                     email: dto.email,
                     hash,
-                    id: dto.id
                 },
 
             });
@@ -47,7 +46,6 @@ export class AuthService {
         const user = await this.prisma.user.findUnique({
             where: {
                 email: dto.email,
-                id: dto.id
             },
         });
         //if user does not exist throw exception
