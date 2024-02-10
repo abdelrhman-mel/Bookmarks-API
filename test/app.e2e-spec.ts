@@ -33,6 +33,27 @@ describe('App e2e',  () => {
       password: '123',
     }
     describe('Signup', () => {
+      it('Should throw error if email is empty', () => {
+        return pactum.spec()
+        .post('/auth/signup')
+        .withBody({
+          password: dto.password,
+        })
+        .expectStatus(400);
+      })
+      it('Should throw error if password is empty', () => {
+        return pactum.spec()
+        .post('/auth/signup')
+        .withBody({
+          email: dto.email,
+        })
+        .expectStatus(400);
+      })
+      it('Should throw error if no body', () => {
+        return pactum.spec()
+        .post('/auth/signup')
+        .expectStatus(400);
+      })
       it('Should signup', () => {
         return pactum.spec()
         .post('/auth/signup')
@@ -41,11 +62,48 @@ describe('App e2e',  () => {
       })
     })
 
-    describe('Signin', () => {})
+    describe('Signin', () => {
+      it('Should throw error if email is empty', () => {
+        return pactum.spec()
+        .post('/auth/signin')
+        .withBody({
+          password: dto.password,
+        })
+        .expectStatus(400);
+      })
+      it('Should throw error if password is empty', () => {
+        return pactum.spec()
+        .post('/auth/signin')
+        .withBody({
+          email: dto.email,
+        })
+        .expectStatus(400);
+      })
+      it('Should throw error if no body', () => {
+        return pactum.spec()
+        .post('/auth/signin')
+        .expectStatus(400);
+      })
+      it('Should sigin', () => {
+        return pactum.spec()
+        .post('/auth/signin')
+        .withBody(dto)
+        .expectStatus(200)
+        .stores('userAt', 'access_token')
+      })
+    })
 
   })
   describe('User', () => {
-    describe('Get me', () => {})
+    describe('Get me', () => {
+      it('Should return current user', () => {
+        return pactum.spec()
+        .get('/users/me')
+        .withHeaders({
+          Authorization: 'Bearer $S{userAt}',
+        })
+      })
+    })
     describe('Edit user', () => {})
 
 
@@ -54,7 +112,7 @@ describe('App e2e',  () => {
     describe('Create bookmark', () => {})
     describe('Get bookmarks', () => {})
     describe('Get bookmark by id', () => {})
-    describe('Edit bookmark', () => {})
-    describe('Delete bookmark', () => {})
+    describe('Edit bookmark by id', () => {})
+    describe('Delete bookmark by id', () => {})
   })
 })
